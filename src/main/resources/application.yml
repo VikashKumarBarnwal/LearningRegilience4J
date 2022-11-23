@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: DEBUG
+
+   
+
+
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      serviceA:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 2
+        failureRateThreshold: 1
+        minimumNumberOfCalls: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 25s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 1
+        slidingWindowType: COUNT_BASED
+        ignore-exceptions:
+          - com.dailycodebuffer.ServiceA.controller.exception.MyException
+
+                   
